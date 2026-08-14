@@ -18,6 +18,67 @@ before a single euro is available to send anywhere.
 This is the answer to the core of your question: ownership and taxation are separate
 questions. Foreign ownership does not mean the money bypasses Romania.
 
+## What "part of a group" actually means
+
+A group is **not a legal entity**. It is a set of separate companies that happen to share a
+controlling owner. Nobody can sue "the OMV group" — you sue a specific company in it.
+
+Each member keeps its own CUI, its own accounts, its own employees, and files its own tax
+return. That is why a Romanian company inside a foreign group is still a Romanian taxpayer.
+
+### Three things that get confused with each other
+
+| Form | Separate legal person? | Taxed how |
+| --- | --- | --- |
+| **Filială** (subsidiary) | **Yes** — own CUI, own accounts | Romanian company, 16% on its own profit |
+| **Sucursală** (branch) | **No** — an extension of the foreign company | Permanent establishment; taxed in Romania on the profit attributable to it |
+| **Punct de lucru** (work point) | No — just a location of one company | Nothing separate; part of that company |
+
+This distinction matters to us twice over. A subsidiary is a **node in the ownership graph**;
+a branch is not a separate company at all, so it has no shareholders of its own; a work point
+is **evidence for the production axis**, not an entity. Modelling all three as "companies"
+would double-count and produce nonsense percentages.
+
+### Control is not the same as consolidation
+
+Above 50% of the votes means **control** — who appoints the board and decides where to invest.
+A controlling parent also **consolidates** the subsidiary's accounts: OMV's group report
+includes 100% of OMV Petrom's revenue line by line, with the other 48.8% shown separately as
+minority interests. So a headline like "the group's revenue" includes money that does not
+belong to the parent. Do not read consolidated figures as ownership.
+
+### What changes, and what doesn't
+
+Unchanged: the company stays Romanian-registered, pays 16% on its Romanian profit, and pays
+wages, contributions, VAT and excise here.
+
+Changed: strategic decisions move up to group level, and **transactions appear between group
+members** — services, brand licences, loans, intra-group purchases. Those are the transfer
+pricing channel described below, and they are the reason "part of a group" is worth flagging
+at all.
+
+### What it means for our model
+
+**We do not store "group" as a label.** A group is an emergent property of `ownership_edges` —
+walk up from a company and whatever you reach is its group. Storing a group name as a field
+would be a guess that goes stale the moment a stake is sold.
+
+Chains are commonly several levels deep and often pass through holding companies in the
+Netherlands, Luxembourg or Cyprus. That is ordinary corporate structuring, not evidence of
+anything by itself. But it does mean an intermediate company is **not** "Dutch" in any
+economic sense — we have to keep walking, and we frequently cannot finish:
+
+```
+Fabrica X SRL (RO)
+  └─ 100% ─ Y Holding BV (NL)
+       └─ 100% ─ Z AG (DE)
+            └─ listed shareholders, mostly untraceable
+```
+
+Result: `ro ≈ 0`, `foreign` small, `unknown` large. The honest output is "registered here,
+produces here, ownership largely untraced" — which is exactly why `unknown` has to survive to
+the surface instead of being rounded into one of the other two buckets.
+
 ## What stays in Romania regardless of who owns it
 
 - **Corporate income tax** — 16% on the Romanian entity's profit.
