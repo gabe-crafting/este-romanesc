@@ -35,6 +35,12 @@ questions. Foreign ownership does not mean the money bypasses Romania.
 For scale: OMV Petrom paid **more than €48 billion in taxes and dividends between 2005 and
 2025**, making it one of the largest single contributors to the Romanian budget.
 
+**Read that figure carefully — it is easy to misread in both directions.** It combines *taxes*
+with *dividends*, and dividends go to every shareholder including the Austrian parent. So the
+€48bn is **not** "money that stayed in Romania": a slice of it is precisely the money that went
+to Vienna. Nor is it the company's turnover — it is one subset of the money the company handled
+over twenty years. See "Follow one year through" below for what the whole flow looks like.
+
 ## What can leave
 
 ### Dividends — and the exemption that matters
@@ -73,6 +79,48 @@ priced above market. Romania constrains this with **arm's-length rules and a man
 transfer pricing file**, and ATAD-derived limits cap interest deductibility. ANAF audits it.
 Whether the constraint bites in any given case is an empirical question, not something our
 data can settle.
+
+## Follow one year through
+
+The intuition "taxes stayed here, everything else went to Austria" gets the shape wrong. Almost
+none of a company's revenue is profit in the first place, so there is no large residual sitting
+around waiting to be repatriated. OMV Petrom Group, 2025:
+
+| | RON | ≈ EUR |
+| --- | --- | --- |
+| Revenue | 32.1 bn | 6.3 bn |
+| Net income | 3.0 bn | 0.61 bn |
+| Capital expenditure | ~7.8 bn | ~1.5 bn |
+
+Read the order of those rows. **Net profit is under 10% of revenue, and capex is more than
+double net profit.** The other ~90% of revenue never becomes profit at all — it goes to crude
+and product purchases, wages, Romanian suppliers, energy, depreciation, excise and tax. And
+the reinvestment number is larger than the profit: wells, the refinery, Neptun Deep. Those
+assets are built in Romania.
+
+Only the last step can leave, and only part of it:
+
+```
+revenue
+  └─ costs, wages, suppliers, excise      ← overwhelmingly domestic
+      └─ taxable profit
+          └─ 16% corporate income tax     ← Romania
+              └─ net profit
+                  ├─ retained / reinvested (capex)   ← Romania
+                  └─ dividends
+                      ├─ 51.2% → OMV, Austria        ← this is what leaves
+                      └─ ~45%  → Romanian state, pension funds, individuals
+```
+
+With dividends set at ~40% of operating cash flow and OMV taking 51.2% of the distribution,
+the amount actually repatriated is on the order of a few hundred million euro a year — call it
+low single-digit percent of turnover. Real money, and nothing like "the rest".
+
+**The caveat that keeps this honest:** transfer pricing sits *inside* the cost line, above the
+profit line, so it never appears as an outflow in any of these figures. If a group overcharges
+its Romanian subsidiary for services, brand or procurement, that money leaves before profit is
+ever measured — and published accounts won't show it. That is exactly why the transfer pricing
+section above, not the dividend section, is where the substantive argument lives.
 
 ## Petrom is the example that breaks the binary
 
