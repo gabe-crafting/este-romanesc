@@ -122,7 +122,46 @@ its Romanian subsidiary for services, brand or procurement, that money leaves be
 ever measured — and published accounts won't show it. That is exactly why the transfer pricing
 section above, not the dividend section, is where the substantive argument lives.
 
-## Petrom is the example that breaks the binary
+## What the 16% is actually charged on
+
+Salaries and investment sit on opposite sides of the tax line, which is the detail that makes
+the flow diagram above look odd at first glance.
+
+**Salaries: deducted before tax.** Wages, employer contributions and the rest of the payroll
+cost are ordinary operating expenses. Profit is measured after them, so the 16% never touches
+the wage bill. (The wage bill is taxed — heavily — but through payroll taxes, not this.)
+
+**Investment: not deducted when spent.** Buying a rig or building a plant does not reduce that
+year's taxable profit by what it cost. The asset is capitalised and written off as
+**depreciation** over its useful life. So OMV Petrom's ~RON 7.8bn of 2025 capex did *not* cut
+taxable profit by RON 7.8bn — only that year's depreciation charge did. This is why capex sits
+*below* the tax line in the diagram: it is funded out of after-tax cash.
+
+The tax base is therefore not "cash left over". Roughly:
+
+```
+accounting profit
+  + non-deductible expenses (added back)
+  − non-taxable income
+  − depreciation, interest (within ATAD limits), other deductions
+  = taxable profit  ×  16%
+```
+
+Romania does reward reinvestment, just through targeted relief rather than by treating capex as
+an expense:
+
+- **Reinvested profit exemption** — profit reinvested in technological equipment, production
+  assets, computers and software is **exempt** from the 16%.
+- **Accelerated depreciation** pulls deductions forward for qualifying assets, though generally
+  it cannot be combined with the reinvested-profit exemption on the same asset (2026 carries a
+  narrow exception).
+- **Minimum turnover tax (IMCA)** — a floor for companies above €50m turnover, introduced
+  precisely because deductions could take large companies to near-zero taxable profit. **0.5%
+  in 2026**, down from 1%, and abolished from 2027.
+
+That last one is the tell: the state already assumed that a purely profit-based charge can be
+deducted down to very little at this scale, and legislated a floor against it. Worth
+remembering before treating "corporate tax paid" as a clean measure of contribution.
 
 Your instinct was that Petrom is Austrian. The shareholder register says something more
 interesting:
