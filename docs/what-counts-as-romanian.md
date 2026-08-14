@@ -137,16 +137,102 @@ Two honest options, and we should pick one rather than fudging:
 
 The first is the honest default. The second is a later enhancement, not a substitute.
 
-### A non-signal to reject explicitly
+## What the barcode actually tells us
 
-Barcodes beginning **594 do not mean "made in Romania."** The EAN/GS1 prefix records which
-GS1 member organisation issued the number — i.e. where the company registered — not where the
-product was manufactured. A Romanian company can carry 594 on goods made anywhere, and
-imported goods made in Romania can carry a foreign prefix.
+Users will assume the barcode answers the whole question. It doesn't — but it is still the
+single most useful thing on the package, for a different reason than people expect.
 
-This myth is widespread enough that users will ask about it. If the app ever scans barcodes,
-the prefix is a lookup key for finding the company, never evidence for the answer. Worth
-saying so in the UI.
+### What EAN-13 encodes
+
+```
+5 9 4 | 1 2 3 4 5 | 6 7 8 9 | 0
+└─────┴───────────┘ └───────┘ └── check digit
+   GS1 company prefix   item reference
+   └── first digits identify the GS1 Member Organisation that issued it
+```
+
+`594` is GS1 Romania. What that establishes is that **the brand owner is a GS1 Romania
+licensee** — a fact about the company, not about where the product was made.
+
+### Why it cannot answer "made here"
+
+- A Romanian company can register with GS1 Romania and manufacture entirely in Asia. Still 594.
+- A foreign brand manufactured in a Romanian plant carries the foreign brand owner's prefix.
+- **Barcode resellers** sell single numbers out of old prefixes, mostly US ones. A Romanian
+  startup that bought one barcode online gets a `0`/`1` prefix regardless of where it is.
+- **Private-label goods** carry the retailer's prefix, so a Romanian-made own-brand product
+  reads as whatever country the chain registered in.
+- **Restricted-distribution ranges** — `020–029`, `040–049`, `200–299` — are assigned in-store
+  for variable-weight and counter goods. There is no global licensee at all. Deli meat, cheese
+  and weighed produce land here, and they are exactly the categories where origin matters most.
+
+So: never render "594 → Romanian" in the UI. It is not what the number means.
+
+### The three ways it genuinely helps
+
+**1. It is the best join key in the system.** This is its real value. A scan yields an exact
+GTIN — no fuzzy matching of "SC Napolact SA" against "Napolact". Product → brand → company
+becomes a primary-key lookup instead of a text-similarity problem. Everything else on this
+page is easier once a product is unambiguously identified.
+
+**2. Verified by GS1 maps a prefix to its licensee.** GS1's GEPIR service was replaced by
+**Verified by GS1** at the end of 2023; it returns the licensee company name and country for a
+GTIN or company prefix, across GS1's member companies worldwide. That gives an authoritative
+barcode → company-name link, which we can then match to a CUI via ANAF. The free tier is
+rate-limited (on the order of tens of lookups), so treat it as a **seeding and verification
+tool, not a runtime dependency** — resolve in bulk offline, cache the mapping, serve from our
+own tables.
+
+**3. A weak positive on the registration axis only.** A 594 prefix does make it likely the
+brand owner is a Romanian-registered entity. That is real evidence — for axis 1, worth a low
+weight, and worth *nothing* on axis 3. Note the asymmetry: **594 is weak positive evidence,
+but its absence is almost no evidence at all**, because of resellers and private label. Any
+scoring code must treat it one-directionally or it will penalise Romanian companies that
+bought a cheap barcode.
+
+### The mark that does answer "made here"
+
+On products of animal origin — meat, dairy, eggs, fish — EU law requires an **oval
+identification (health) mark**, printed near the barcode:
+
+```
+┌─────────────┐
+│     RO      │   country of the approved establishment
+│  L 1234 EC  │   veterinary approval number
+│     CE      │
+└─────────────┘
+```
+
+This is regulated, it identifies the **approved establishment that processed or packed the
+product**, and the numbers are assigned by **ANSVSA**, which authorises those establishments
+and publishes lists of them. Unlike the barcode, this is a genuine production-location fact,
+and it is checkable against a Romanian dataset.
+
+Its limits, which matter:
+
+- Animal-origin products only. Nothing for bread, beer, cosmetics, furniture.
+- It identifies the **last approved establishment**, which may be a packer rather than a
+  producer. Milk from anywhere bottled in Cluj still gets an `RO` oval.
+- It has to be read by OCR from a photo of the package, not from a scan.
+
+Label text is the other OCR target: `Fabricat în România`, `Produs în România`, and the origin
+declarations required under EU food information rules. Read them carefully — **`Ambalat în
+România` means packed, not produced**, and treating the two as equivalent is precisely the
+kind of overclaim that discredits the product.
+
+### What this implies for the app
+
+The scan and the evidence are two different steps, and the design should say so:
+
+1. **Scan the barcode to identify.** GTIN → product → company. Fast, exact, offline-cacheable.
+2. **If the company is known**, answer from our data — ownership and registration are company
+   facts, and no barcode is needed for them.
+3. **If origin is the question**, ask the user to photograph the label. The oval mark and the
+   origin text are where "made here" actually lives.
+
+That also turns the unknown-product case into a contribution flow rather than a dead end: a
+scan we can't resolve is an invitation to photograph the label, which is the one thing a user
+standing in a shop can give us that no register can.
 
 ## Confidence and evidence
 
@@ -210,3 +296,7 @@ Not optional, and cheaper to design around now than to retrofit:
 - [ONRC — access guide to the beneficial owners register](https://www.onrc.ro/documente/ghidAccesFIRBR.pdf)
 - [ONRC — trade register information](https://www.onrc.ro/index.php/ro/informatii/informatii-rc)
 - [ListaFirme — beneficial owners API](https://listafirme.ro/articole/registrul-beneficiarilor-reali.asp)
+- [GS1 company database / GEPIR, superseded by Verified by GS1](https://www.gs1us.org/tools/gs1-company-database-gepir)
+- [GEPIR overview](https://en.wikipedia.org/wiki/GEPIR)
+- [ANSVSA — authorisation and registration of establishments](https://www.ansvsa.ro/industrie-si-afaceri/autorizare-inregistrare-unitati-animal-non-animal/)
+- [ANSVSA — establishments approved for intra-community trade](http://www.ansvsa.ro/unitati-schimb-intracomunitar/)
