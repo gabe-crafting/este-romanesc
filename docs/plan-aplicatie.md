@@ -2,6 +2,12 @@
 
 What we build first, what we hold back, and why. Decided 2026-08-15.
 
+> **Superseded for the first release by [mvp.md](mvp.md)**, agreed later the same day. The MVP
+> ships ownership alone — the axis this plan holds back — on the strength of hand-curating the
+> few hundred brands that are actually on a shelf, rather than covering every company. This
+> document stays as the plan for what comes after the MVP; the axis ordering and the wording
+> rules below still apply.
+
 ## The scope decision
 
 Of the four things the app can show (see [de-unde-luam-datele.md](de-unde-luam-datele.md)):
